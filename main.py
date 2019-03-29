@@ -32,11 +32,6 @@ class MainPage(webapp2.RequestHandler):
 
         lexicoList = []
 
-        # for i in wordList:
-        #     lower = i.list1
-        #     lower = lowwer.lower()
-        #     emptyList.append(lower)
-        #
         # for j in emptyList:
         #     y = sorted(j)
         #     lexicoList.append(y)
