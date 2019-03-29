@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Try-4</title>
+  </head>
+  <body>
+    Add item here<br/>
+    <form method="post" action="/">
+      <input type="text" name="list1" required />
+      <input type="submit" name="button" value="add"/>
+    </form><br/>
+
+  <!-- <b>Number of words in Engine:</b> {{ length }}<br/>
+  <br/>
+
+      <b>List:</b> {%for i in emptyList %}
+      {{i}},
+    {%endfor%}<br/>
+<br/>
+    <b>Lexicographical List:</b> {%for j in lexicoList%}
+    {{j}}
+    {%endfor%}<br/>
+<br/>
+
+Dictionary: {{keyValue}}<br/>
+<br/> -->
+
+<b>WordList</b>:<br/>
+    {% for item in wordList.words %}
+    {{ item }}<br/>
+    {%endfor%}
+
+  </body>
+</html>
