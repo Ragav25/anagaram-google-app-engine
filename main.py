@@ -18,6 +18,15 @@ autoescape = True
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
+
+        def createLexicoGraphicalSort(word):
+            sortedWord = sorted(word)
+            lexicoKey = ""
+            for letter in sortedWord:
+                lexicoKey += letter
+            logging.info(lexicoKey)
+            return lexicoKey
+
         self.response.headers['Content-Type']='text/html'
 
         userId = users.get_current_user().user_id()
@@ -28,28 +37,49 @@ class MainPage(webapp2.RequestHandler):
             wordList = WordList(id=userId)
             wordList.put()
 
-        emptyList =[]
+        wordDict = dict()
 
-        lexicoList = []
+        for word in wordList.words:
+            word = str(word)
+            sortedKey = str(createLexicoGraphicalSort(word))
+            if sortedKey in wordDict:
+                wordDict[sortedKey].append(word)
+                continue
+            wordDict[sortedKey] = []
+            wordDict[sortedKey].append(word)
 
-        # for j in emptyList:
+        lengths = [len(v) for v in wordDict.values()]
+
+        logging.info("lenght : ", lengths)
+
+        logging.info(wordDict)
+
+        # for j in listOfWords:
         #     y = sorted(j)
         #     lexicoList.append(y)
         #
-        # tupleValue = tuple(lexicoList)
-        #
+        # # tupleValue = tuple(lexicoList)
+        # #
         # tupleValue = [tuple(x) for x in lexicoList]
         #
-        # # keyValue = dict(zip(d, b))
-        # dictionary = dict(zip(tupleValue, emptyList))
-
-        # logging.info(emptyList)
+        # keyExists = False
+        # for key in dictionary:
+        #     if key == :
+        #         keyExists = True
+        #         self.redirect('/error')
+        #
+        # if not keyExists:
+        #     dictionary.update(zip(tupleValue, listOfWords))
+        # # dictionary = dict(zip(tupleValue, listOfWords))
 
         template_values = {
         'wordList': wordList,
-        # 'emptyList': emptyList,
+        'listOfWords': wordDict,
+        'uniqueAnagram': len(wordDict),
+        'wordsInEngine': len(wordList.words),
         # 'lexicoList': lexicoList,
-        # 'length': len(emptyList),
+        # 'tupleValue': tupleValue,
+        # # 'length': len(emptyList),
         # 'keyValue': dictionary
         }
 
@@ -60,9 +90,6 @@ class MainPage(webapp2.RequestHandler):
         action = self.request.get('button')
 
         userId = users.get_current_user().user_id()
-
-        emptyLexi = []
-        logging.info(emptyLexi)
 
         if action == 'add':
             newWordToSave = self.request.get('list1')
