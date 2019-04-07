@@ -6,6 +6,9 @@
   </head>
   <body>
     <b><a href="/">Home</a></b><br/>
+    Total Words in Engine Counter: {{ wordCounter }}<br/>
+    Unique Count: {{ uniqueAnagramCounter }}
+    <br/>
     Add item here<br/>
     <form method="post" action="/page2">
       <input type="text" name="list1" required />
@@ -18,14 +21,14 @@
       <b>List:</b> {%for i in listOfWords %}
       {{i}},
     {%endfor%}<br/>
-
+<!--
     <b>Unique Anagram:</b> {{ uniqueAnagram }}<br/>
     <br/>
 
     <b>Words in Engine:</b> {{ wordsInEngine }}<br/>
     <br/>
 
-    <b>Count of each words in each key:</b> {{lengths}}<br/>
+    <b>Count of each words in each key:</b> {{lengths}}<br/> -->
     <br/>
 <!-- <br/>
     <b>Lexicographical List:</b> {%for j in lexicoList%}

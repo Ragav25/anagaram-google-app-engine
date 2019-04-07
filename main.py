@@ -2,15 +2,13 @@ import os
 import jinja2
 import webapp2
 import logging
+import re
 from google.appengine.api import users
-
-# from google.appengine.api import users
 from google.appengine.ext import ndb
 
 from page2 import Page2
-# from myuser import MyUser
 from WordList import WordList
-import pprint
+from anagramUtils import createLexicoGraphicalSort, createWordDict
 
 JINJA_ENVIRONMENT = jinja2.Environment(
 loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -35,35 +33,14 @@ class MainPage(webapp2.RequestHandler):
             self.response.write(template.render(template_values))
             return
 
-        def createLexicoGraphicalSort(word):
-            # wordTrim = word.strip()
-            sortedWord = sorted(word)
-            logging.info(sortedWord)
-            lexicoKey = ""
-            for letter in sortedWord:
-                lexicoKey += letter
-            logging.info(lexicoKey)
-            return lexicoKey
-
         key = ndb.Key('WordList',user.user_id())
         wordList = key.get()
 
         if wordList == None:
-            wordList = WordList(id=user.user_id())
+            wordList = WordList(id=user.user_id(), wordCounter = 0, uniqueAnagramCounter = 0)
             wordList.put()
 
-        wordDict = dict()
-
-        for word in wordList.words:
-            word = str(word.strip())
-            sortedKey = str(createLexicoGraphicalSort(word))
-            if sortedKey in wordDict:
-                wordDict[sortedKey].append(word)
-                continue
-            wordDict[sortedKey] = []
-            wordDict[sortedKey].append(word)
-
-
+        wordDict = createWordDict(wordList.words)
         anagramWord = []
         anagramOutput = dict()
         splitWord = None
@@ -97,6 +74,8 @@ class MainPage(webapp2.RequestHandler):
         'welcome': welcome,
         'wordList': wordList,
         'anagramOutput':anagramOutput,
+        'wordCounter': wordList.wordCounter,
+        'uniqueAnagramCounter': wordList.uniqueAnagramCounter
 
         }
 
@@ -115,9 +94,11 @@ class MainPage(webapp2.RequestHandler):
 
             searchAnagram = self.request.get('anagram')
 
-            url = "/?sentence=" + searchAnagram
-
-            self.redirect(url)
+            if re.match("^[a-zA-Z'\s']*$", searchAnagram):
+                url = "/?sentence=" + searchAnagram
+                self.redirect(url)
+            else:
+                self.redirect('/errorOnlyText')
 
 
 app = webapp2.WSGIApplication([('/', MainPage), ('/page2', Page2)], debug = True)
