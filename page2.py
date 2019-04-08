@@ -3,6 +3,7 @@ import jinja2
 import webapp2
 import logging
 from google.appengine.api import users
+from google.appengine.api import taskqueue
 
 # from google.appengine.api import users
 from google.appengine.ext import ndb
@@ -36,7 +37,7 @@ class Page2(webapp2.RequestHandler):
         key = ndb.Key('WordList',userId)
         wordList = key.get()
         if wordList == None:
-            wordList = WordList(id=userId)
+            wordList = WordList(id=userId, wordCounter = 0, uniqueAnagramCounter = 0)
             wordList.put()
 
         wordDict = dict()
@@ -52,11 +53,6 @@ class Page2(webapp2.RequestHandler):
 
         lengths = [len(v) for v in wordDict.values()]
 
-        # for v in wordDict.values():
-        #     logging.info([len(v)])
-        # for k in wordDict.keys():
-        #     logging.info([len(k)])
-
         logging.info(lengths)
 
         logging.info(wordDict)
@@ -67,6 +63,8 @@ class Page2(webapp2.RequestHandler):
         'uniqueAnagram': len(wordDict),
         'wordsInEngine': len(wordList.words),
         'lengths': lengths,
+        'wordCounter': wordList.wordCounter,
+        'uniqueAnagramCounter': wordList.uniqueAnagramCounter
         # 'lexicoList': lexicoList,
         # 'tupleValue': tupleValue,
         # # 'length': len(emptyList),
@@ -87,6 +85,9 @@ class Page2(webapp2.RequestHandler):
             key = ndb.Key('WordList', userId)
             wordList = key.get()
             wordList.words.append(newWordToSave.lower())
+
+            task = taskqueue.add(url='/update_counter', target='worker',
+            params={'newWordToSave': newWordToSave, 'key': userId})
 
             wordList.put()
 

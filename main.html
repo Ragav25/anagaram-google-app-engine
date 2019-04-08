@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>Try-4</title>
     <style>
+
       /* style for logout and email hover */
 
       .dropbtn{
@@ -42,16 +43,63 @@
       .dropdown:hover .dropdown-content {display: block;}
       /* End Style for login and email */
 
-      /* Style for Href link */
-      a:link {
-      color: Blue;
+      /* style for Add Word Link */
+      .topnav {
+        text-align: center;
+        padding-top: 99px;
+        padding-left: 15px;
+  }
+
+  .topnav .sub1topnav{
+    padding-right: 15px;
+  }
+    .topnav a {
+      color: blue;
       text-decoration: none;
-    }
-    a:hover {
-      background-color: transparent;
-      text-decoration: underline;
-    }
-      /* End Style for Href link  */
+  }
+  .topnav a:hover {
+    background-color: transparent;
+    text-decoration: underline;
+    color: red;
+}
+      /* End for style add word link */
+
+      /* Style for Count */
+
+
+      .count{
+        text-align: center;
+        padding-left: 15px;
+      }
+
+      .count .subcount{
+        padding-right: 15px;
+      }
+
+      /* End for count */
+
+      /* inputForm style*/
+
+      .inputForm {
+        text-align: center;
+        padding-top: 15px;
+      }
+
+      /* end inputForm */
+
+      table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+
+      }
+
+      td, th {
+        border: 1px solid #dddddd;
+        text-align: center;
+        padding: 8px;
+      }
+
 
     </style>
   </head>
@@ -62,24 +110,49 @@
     <div class="dropdown">
       <button class="dropbtn"><b>{{ user.email() }}</b></button>
       <div class="dropdown-content" style="right:0;">
-        <a href="{{ logout_url }}"> <b>Logout</b> </a>
+        <a href="{{ logout_url }}"> <b>Logout</b></a>
       </div>
     </div>
 
-    <b><a href="/page2">Add Words</a></b>
+  <div class="topnav">
+    <b class="sub1topnav"><a href="/page2">Add Words</a></b>
+    <b><a href="/blobpage">Add File</a></b><br/>
+  </div>
+  <br/>
 
+  <div class='count'>
+    <b class = 'subcount'>Words in Engine: {{ wordCounter }}</b>
+    <b>Unique Count: {{ uniqueAnagramCounter }}<br/></b>
+  </div>
+  <br/>
+
+<div class="inputForm">
     <form action="/" method="post">
-      Anagram to Solve<br/>
+      <b>Anagram to Solve</b>
       <input type="text" name="anagram" />
       <input type="submit" name="button" value="Scramble"/>
-    </form>
 
-    <b>Anagram</b><br/>
+      <input type="submit" name="button" value="Try Another"/>
+    </form>
+  </div>
+  <br/>
+
+  <table>
+    {%if anagramOutput %}
+    <tr>
+      <th>Entered Word</th>
+      <td><b>Anagrams</b></td>
+    </tr>
     {%for key, value in anagramOutput.items()%}
-    <b>{{ key }}</b>: {{ value }}<br/>
+    <tr>
+    <th>{{ key }}</th>
+    <td>{{ value }}</td>
+  </tr>
+
     {%endfor%}
     <!-- {{printDictKey}} : {{printDictValue}}<br/> -->
-
+    {%endif%}
+    </table>
     {%endif%}
 
   </body>

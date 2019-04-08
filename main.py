@@ -2,15 +2,15 @@ import os
 import jinja2
 import webapp2
 import logging
+import re
 from google.appengine.api import users
-
-# from google.appengine.api import users
 from google.appengine.ext import ndb
 
 from page2 import Page2
-# from myuser import MyUser
 from WordList import WordList
-import pprint
+from anagramUtils import createLexicoGraphicalSort, createWordDict
+from blobPage import BlobPage
+
 
 JINJA_ENVIRONMENT = jinja2.Environment(
 loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -35,36 +35,15 @@ class MainPage(webapp2.RequestHandler):
             self.response.write(template.render(template_values))
             return
 
-        def createLexicoGraphicalSort(word):
-            # wordTrim = word.strip()
-            sortedWord = sorted(word)
-            logging.info(sortedWord)
-            lexicoKey = ""
-            for letter in sortedWord:
-                lexicoKey += letter
-            logging.info(lexicoKey)
-            return lexicoKey
-
         key = ndb.Key('WordList',user.user_id())
         wordList = key.get()
 
         if wordList == None:
-            wordList = WordList(id=user.user_id())
+            wordList = WordList(id=user.user_id(), wordCounter = 0, uniqueAnagramCounter = 0)
             wordList.put()
 
-        wordDict = dict()
-
-        for word in wordList.words:
-            word = str(word.strip())
-            sortedKey = str(createLexicoGraphicalSort(word))
-            if sortedKey in wordDict:
-                wordDict[sortedKey].append(word)
-                continue
-            wordDict[sortedKey] = []
-            wordDict[sortedKey].append(word)
-
-
-        anagramWord = []
+        wordDict = createWordDict(wordList.words)
+        # anagramWord = []
         anagramOutput = dict()
         splitWord = None
 
@@ -74,7 +53,6 @@ class MainPage(webapp2.RequestHandler):
             words = str(words.strip())
             splitWord = words.split()
             for word in splitWord:
-                logging.info("$$$"+word)
                 anagramOutput[word] = []
                 wordLex = createLexicoGraphicalSort(word)
                 if wordLex in wordDict:
@@ -82,21 +60,14 @@ class MainPage(webapp2.RequestHandler):
                 else:
                     anagramOutput[word] = "Sorry!! No Anagram Found"
 
-        # if list2 != []:
-        #     anagram = [j for i in list2 for j in i]
-        #     anagramValues = ', '.join(anagram)
-        #
-        # elif list2 == []:
-        #     anagramValues = "Sorry!! No Anagram Found"
-
-            # logging.info(anagramValues)
-
         template_values = {
         'logout_url': users.create_logout_url(self.request.uri),
         'user': user,
         'welcome': welcome,
         'wordList': wordList,
         'anagramOutput':anagramOutput,
+        'wordCounter': wordList.wordCounter,
+        'uniqueAnagramCounter': wordList.uniqueAnagramCounter
 
         }
 
@@ -115,9 +86,28 @@ class MainPage(webapp2.RequestHandler):
 
             searchAnagram = self.request.get('anagram')
 
-            url = "/?sentence=" + searchAnagram
+            if re.match("^[a-zA-Z'\s']*$", searchAnagram):
+                url = "/?sentence=" + searchAnagram
+                self.redirect(url)
+            else:
+                self.redirect('/errorOnlyText')
 
-            self.redirect(url)
+        elif action == 'Try Another':
+            self.redirect('/')
+
+class ErrorOnlyText(webapp2.RequestHandler):
+    def get(self):
+        userId = users.get_current_user().user_id()
+        key = ndb.Key('WordList', userId)
+        wordList = key.get()
+
+        template_values ={
+        'wordList': wordList
+        }
+
+        template = JINJA_ENVIRONMENT.get_template('errorOnlyText.html')
+        self.response.write(template.render(template_values))
 
 
-app = webapp2.WSGIApplication([('/', MainPage), ('/page2', Page2)], debug = True)
+app = webapp2.WSGIApplication([('/', MainPage), ('/page2', Page2),
+('/blobpage', BlobPage), ('/errorOnlyText', ErrorOnlyText)], debug = True)
