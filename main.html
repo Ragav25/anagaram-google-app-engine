@@ -12,15 +12,26 @@
     </form><br/>
 
   <!-- <b>Number of words in Engine:</b> {{ length }}<br/>
-  <br/>
+  <br/> -->
 
-      <b>List:</b> {%for i in emptyList %}
+      <b>List:</b> {%for i in listOfWords %}
       {{i}},
     {%endfor%}<br/>
-<br/>
+
+    <b>Unique Anagram:</b> {{ uniqueAnagram }}<br/>
+    <br/>
+
+    <b>Words in Engine:</b> {{ wordsInEngine }}<br/>
+    <br/>
+<!-- <br/>
     <b>Lexicographical List:</b> {%for j in lexicoList%}
     {{j}}
     {%endfor%}<br/>
+<br/>
+
+<b>Tuple Values: </b> {%for k in tupleValue%}
+{{k}}
+{%endfor%}<br/>
 <br/>
 
 Dictionary: {{keyValue}}<br/>
