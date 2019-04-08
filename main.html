@@ -3,44 +3,84 @@
   <head>
     <meta charset="utf-8">
     <title>Try-4</title>
+    <style>
+      /* style for logout and email hover */
+
+      .dropbtn{
+        background-color: white;
+        color: black;
+        padding: 16px;
+        font-size:15px;
+        border: none;
+        cursor: pointer;
+      }
+
+      .dropdown {
+        float:right;
+        position: relative;
+        display: inline-block;
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+      }
+
+      .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+      }
+
+      .dropdown-content a:hover {background-color: #f1f1f1;}
+      .dropdown:hover .dropdown-content {display: block;}
+      /* End Style for login and email */
+
+      /* Style for Href link */
+      a:link {
+      color: Blue;
+      text-decoration: none;
+    }
+    a:hover {
+      background-color: transparent;
+      text-decoration: underline;
+    }
+      /* End Style for Href link  */
+
+    </style>
   </head>
   <body>
-    Add item here<br/>
-    <form method="post" action="/">
-      <input type="text" name="list1" required />
-      <input type="submit" name="button" value="add"/>
-    </form><br/>
+    {%if user%}
+    <h1 style="text-align:center;">Welcome to Anagram Engine</h1>
 
-  <!-- <b>Number of words in Engine:</b> {{ length }}<br/>
-  <br/> -->
+    <div class="dropdown">
+      <button class="dropbtn"><b>{{ user.email() }}</b></button>
+      <div class="dropdown-content" style="right:0;">
+        <a href="{{ logout_url }}"> <b>Logout</b> </a>
+      </div>
+    </div>
 
-      <b>List:</b> {%for i in listOfWords %}
-      {{i}},
-    {%endfor%}<br/>
+    <b><a href="/page2">Add Words</a></b>
 
-    <b>Unique Anagram:</b> {{ uniqueAnagram }}<br/>
-    <br/>
+    <form action="/" method="post">
+      Anagram to Solve<br/>
+      <input type="text" name="anagram" />
+      <input type="submit" name="button" value="Scramble"/>
+    </form>
 
-    <b>Words in Engine:</b> {{ wordsInEngine }}<br/>
-    <br/>
-<!-- <br/>
-    <b>Lexicographical List:</b> {%for j in lexicoList%}
-    {{j}}
-    {%endfor%}<br/>
-<br/>
-
-<b>Tuple Values: </b> {%for k in tupleValue%}
-{{k}}
-{%endfor%}<br/>
-<br/>
-
-Dictionary: {{keyValue}}<br/>
-<br/> -->
-
-<b>WordList</b>:<br/>
-    {% for item in wordList.words %}
-    {{ item }}<br/>
+    <b>Anagram</b><br/>
+    {%for key, value in anagramOutput.items()%}
+    <b>{{ key }}</b>: {{ value }}<br/>
     {%endfor%}
+    <!-- {{printDictKey}} : {{printDictValue}}<br/> -->
+
+    {%endif%}
 
   </body>
 </html>
