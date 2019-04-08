@@ -53,11 +53,6 @@ class Page2(webapp2.RequestHandler):
 
         lengths = [len(v) for v in wordDict.values()]
 
-        # for v in wordDict.values():
-        #     logging.info([len(v)])
-        # for k in wordDict.keys():
-        #     logging.info([len(k)])
-
         logging.info(lengths)
 
         logging.info(wordDict)

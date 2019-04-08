@@ -3,24 +3,53 @@
   <head>
     <meta charset="utf-8">
     <title>Try-4</title>
+    <style>
+    .addWord{
+      text-align: center;
+      padding-top: 25px;
+    }
+
+    .count{
+      text-align: center;
+      padding-top: 15px;
+    }
+
+    .count a {
+    color: blue;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .count a:hover {
+  background-color: transparent;
+  text-decoration: underline;
+  color: red;
+}
+
+    </style>
   </head>
   <body>
-    <b><a href="/">Home</a></b><br/>
-    Total Words in Engine Counter: {{ wordCounter }}<br/>
-    Unique Count: {{ uniqueAnagramCounter }}
-    <br/>
-    Add item here<br/>
-    <form method="post" action="/page2">
+
+    <div class="count">
+      <b><a href="/">Home</a></b><br/>
+      <br/>
+    <b>Words in Engine:</b> {{ wordCounter }}
+    <b>Unique Count:</b> {{ uniqueAnagramCounter }}
+    <br/></div>
+
+    <div class = "addWord">
+    <b>Add item here</b> <form method="post" action="/page2">
       <input type="text" name="list1" required />
       <input type="submit" name="button" value="add"/>
     </form><br/>
+  </div>
 
   <!-- <b>Number of words in Engine:</b> {{ length }}<br/>
   <br/> -->
 
-      <b>List:</b> {%for i in listOfWords %}
+      <!-- <b>List:</b> {%for i in listOfWords %}
       {{i}},
-    {%endfor%}<br/>
+    {%endfor%}<br/> -->
 <!--
     <b>Unique Anagram:</b> {{ uniqueAnagram }}<br/>
     <br/>
@@ -29,7 +58,7 @@
     <br/>
 
     <b>Count of each words in each key:</b> {{lengths}}<br/> -->
-    <br/>
+
 <!-- <br/>
     <b>Lexicographical List:</b> {%for j in lexicoList%}
     {{j}}
@@ -44,10 +73,10 @@
 Dictionary: {{keyValue}}<br/>
 <br/> -->
 
-<b>WordList</b>:<br/>
+<!-- <b>WordList</b>:<br/>
     {% for item in wordList.words %}
     {{ item }}<br/>
-    {%endfor%}
+    {%endfor%} -->
 
   </body>
 </html>

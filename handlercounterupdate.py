@@ -22,10 +22,8 @@ class HandlerCounterUpdate(webapp2.RequestHandler):
         # self.redirect('/page2')
 
     def post(self):
-        logging.info("$$$$$$")
         newWordToSave = self.request.get('newWordToSave')
         key = self.request.get('key')
-        logging.info(key + " %% " + newWordToSave)
         self.update(newWordToSave, key)
 
 app = webapp2.WSGIApplication([('/update_counter', HandlerCounterUpdate)])

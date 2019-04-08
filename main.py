@@ -9,6 +9,8 @@ from google.appengine.ext import ndb
 from page2 import Page2
 from WordList import WordList
 from anagramUtils import createLexicoGraphicalSort, createWordDict
+from blobPage import BlobPage
+
 
 JINJA_ENVIRONMENT = jinja2.Environment(
 loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -41,7 +43,7 @@ class MainPage(webapp2.RequestHandler):
             wordList.put()
 
         wordDict = createWordDict(wordList.words)
-        anagramWord = []
+        # anagramWord = []
         anagramOutput = dict()
         splitWord = None
 
@@ -51,22 +53,12 @@ class MainPage(webapp2.RequestHandler):
             words = str(words.strip())
             splitWord = words.split()
             for word in splitWord:
-                logging.info("$$$"+word)
                 anagramOutput[word] = []
                 wordLex = createLexicoGraphicalSort(word)
                 if wordLex in wordDict:
                     anagramOutput[word] = ", ".join(wordDict[wordLex])
                 else:
                     anagramOutput[word] = "Sorry!! No Anagram Found"
-
-        # if list2 != []:
-        #     anagram = [j for i in list2 for j in i]
-        #     anagramValues = ', '.join(anagram)
-        #
-        # elif list2 == []:
-        #     anagramValues = "Sorry!! No Anagram Found"
-
-            # logging.info(anagramValues)
 
         template_values = {
         'logout_url': users.create_logout_url(self.request.uri),
@@ -100,5 +92,22 @@ class MainPage(webapp2.RequestHandler):
             else:
                 self.redirect('/errorOnlyText')
 
+        elif action == 'Try Another':
+            self.redirect('/')
 
-app = webapp2.WSGIApplication([('/', MainPage), ('/page2', Page2)], debug = True)
+class ErrorOnlyText(webapp2.RequestHandler):
+    def get(self):
+        userId = users.get_current_user().user_id()
+        key = ndb.Key('WordList', userId)
+        wordList = key.get()
+
+        template_values ={
+        'wordList': wordList
+        }
+
+        template = JINJA_ENVIRONMENT.get_template('errorOnlyText.html')
+        self.response.write(template.render(template_values))
+
+
+app = webapp2.WSGIApplication([('/', MainPage), ('/page2', Page2),
+('/blobpage', BlobPage), ('/errorOnlyText', ErrorOnlyText)], debug = True)

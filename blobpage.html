@@ -1,0 +1,46 @@
+<html>
+<head>
+  <title> BlobStore</title>
+  <style>
+  .upload {
+    text-align: center;
+    padding-top: 25px;
+  }
+  .upload a {
+    color: blue;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .upload a:hover {
+  background-color: transparent;
+  text-decoration: underline;
+  color: red;
+}
+
+  .center{
+    text-align: center;
+  }
+
+
+  </style>
+</head>
+
+<body>
+  <h2 class="center">Upload your File here</h2>
+<div class="upload">
+  <a href='/'>Home</a>
+  <br/>
+  <br/>
+  <form action="/blobpage" method="post" enctype="multipart/form-data" >
+    Upload File: <input type="file" name="my_file" accept="text/*" required />
+    <input type="submit"/>
+  </form>
+  <div>
+  <!-- Uploaded file: {{ UploadedFile }}<br/>
+
+  {% for i in collection.filenames %}
+  {{ i }}<br/>
+  {%endfor%} -->
+</body>
+</html>
